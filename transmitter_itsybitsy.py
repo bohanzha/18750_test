@@ -29,17 +29,17 @@ import board
 import digitalio
 from analogio import AnalogIn
  
-signal_to_send = [1,0,0,0,1,1,1,0]
+signal_to_send = [0,1,0,0,1,1,0,1,1,0,0]
 signal_length = 2
 
-tone_volume = .3  # Increase this to increase the volume of the tone.
-frequency = 19000  # Set this to the Hz of the tone you want to generate.
-length = 8000 // frequency
-low_freq_wave = array.array("H", [0] * length)
-for i in range(length):
-    low_freq_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
+tone_volume = 1  # Increase this to increase the volume of the tone.
+lfrequency = 1050  # Set this to the Hz of the tone you want to generate.
+llength = 8000 // lfrequency
+low_freq_wave = array.array("H", [0] * llength)
+for i in range(llength):
+    low_freq_wave[i] = int((1 + math.sin(math.pi * 2 * i / llength)) * tone_volume * (2 ** 15 - 1))
 
-frequency = 21000  # Set this to the Hz of the tone you want to generate.
+frequency = 1600  # Set this to the Hz of the tone you want to generate.
 length = 8000 // frequency
 high_freq_wave = array.array("H", [0] * length)
 for i in range(length):
@@ -57,16 +57,19 @@ i = 0
 while True:
   #print(analog_in.value)
   if(signal_to_send[i]==1):
+    a = audioio.AudioOut(board.A0, high_freq_wave)
+    print("playing")
+    a.play(loop=True)
+    time.sleep(signal_length/2)
+    a.stop()
+    time.sleep(signal_length/2)
+  else:
     a = audioio.AudioOut(board.A0, low_freq_wave)
     print("playing")
     a.play(loop=True)
-    time.sleep(signal_length)
+    time.sleep(signal_length/2)
     a.stop()
-  else:
-    a = audioio.AudioOut(board.A0, high_freq_wave)
-    print("playing")
-    a.play()
-    time.sleep(signal_length)
+    time.sleep(signal_length/2)
     while a.playing:
       pass
     print("stopped")
