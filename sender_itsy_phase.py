@@ -57,13 +57,14 @@ i = 0
 while True:
   #print(analog_in.value)
   if(signal_to_send[i]==1):
+    time.sleep(.2)
     a = audioio.AudioOut(board.A0, low_freq_wave)
     print("playing")
     a.play(loop=True)
     time.sleep(signal_length)
     a.stop()
   else:
-    a = audioio.AudioOut(board.A0, high_freq_wave)
+    a = audioio.AudioOut(board.A0, low_freq_wave)
     print("playing")
     a.play()
     time.sleep(signal_length)
